@@ -11,4 +11,10 @@ size_t str_length(const char *str);
 
 char *str_copy(char *dest, const char *src);
 
+char *str_ncopy(char *dest, const char *src,  size_t count);
+
+char *str_CAT(char *dest, const char *src);
+
+char *str_nCAT(char *dest, const char *src,  size_t count);
+
 #endif //STR_FUNCS_H

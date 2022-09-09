@@ -39,19 +39,6 @@ size_t str_length(const char *str)
     return i;   
 }
 
-
-
-/**
- * @brief copies src string to dest
- * 
- * Is unsafe to use, because of can rewrite memory cells you dont knows what is inside
- * 
- * @param dest destinion string
- * @param src source string
- * 
- * @return char first copied char
- */
-
 char *str_copy(char *dest, const char *src)
 {
     assert((dest != 0) && (src != 0));
@@ -61,8 +48,7 @@ char *str_copy(char *dest, const char *src)
     while(true)
     {
         dest[i] = src[i];
-        if (src[i] =
-        = 0)
+        if (src[i] == 0)
             return dest;
         i++;        
     }
@@ -71,13 +57,50 @@ char *str_copy(char *dest, const char *src)
 
 char *str_ncopy(char *dest, const char *src, size_t count)
 {   
-    size_t dest_size = str_length(dest);
-    char dest_copy[dest_size + 1];
-    str_copy(dest_copy, dest);
+    size_t i = 0;
 
-
-    return;
+    while(i < count)
+    {
+        if(src[i] != 0)
+            dest[i] = src[i];
+        else 
+            dest[i] = 0;
+        i++;
+    }
+    return dest;
 } 
+
+char *str_CAT(char *dest, const char *src)
+{    
+    size_t skipped = 0;
+
+    for(skipped; dest[skipped] != 0; skipped++)
+        ;
+    for(size_t i = 0; src[i] != 0; i++)
+    {
+        dest[skipped+i] = src[i];
+    }
+    return dest;
+}
+
+char *str_nCAT(char *dest, const char *src, size_t count)
+{
+    size_t num1 = 0;
+
+    // for(num1; (dest[num1] != 0); num1++)
+    //     ;
+    while(dest[num1] != 0)
+        num1++;
+    for(size_t num2 = 0; (num2 < count); num2++)
+        if(src[num2] != 0)
+            dest[num1 + num2] = src[num2];
+        else
+        {
+            dest[num1 + num2] = 0;
+            break;
+        }
+    return dest;
+}
 //puts, strchr, strlen, strcpy, strncpy, strcat, strncat, fgets, strdup, getline - именно в таком порядке. 
 
 
