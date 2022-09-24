@@ -1,20 +1,16 @@
-#include <string>
-#include <stdio.h>
-#include <math.h>
 #include "str_funcs.h"
-#include <assert.h>
-#include <malloc.h>
 
 int put_str(const char str[])
 {
     assert(str != nullptr);
 
-    for (int i = 0; str[i] != 0; ++i)
+    for(int i = 0; str[i] != 0; ++i)
     {
         if (putchar(str[i]) == EOF) 
             return EOF;
     }
     putchar('\n');
+
     return str[0];
 }   
 
@@ -22,7 +18,7 @@ char* str_chr(char *str, int ch)
 {              
     assert(str != nullptr); 
     
-    for (int i = 0; str[i] != 0; ++i)
+    for(int i = 0; str[i] != 0; ++i)
     {
         if (str[i] == ch) 
             return &str[i];
@@ -32,11 +28,13 @@ char* str_chr(char *str, int ch)
 
 size_t str_length(const char *str) 
 {
-    assert(str !=0);
+    assert(str != nullptr);
 
     size_t i = 0;
-    for (i = 0; str[i] != 0; i++)
+
+    for(; str[i] != 0; i++)
         ;
+
     return i;   
 }
 
@@ -46,14 +44,13 @@ char *str_copy(char *dest, const char *src)
     
     size_t i = 0;
 
-    while(true)
+    for(; src[i] != 0; i++)
     {
         dest[i] = src[i];
-        if (src[i] == 0)
-            return dest;
-        i++;        
     }
-    return nullptr;
+    dest[i] = 0;
+
+    return dest;
 }
 
 char *str_ncopy(char *dest, const char *src, size_t count)
@@ -62,13 +59,9 @@ char *str_ncopy(char *dest, const char *src, size_t count)
 
     size_t i = 0;
 
-    while(i < count)
+    for(; (src[i] != 0) && (i < count); i++)
     {
-        if(src[i] != 0)
-            dest[i] = src[i];
-        else 
-            dest[i] = 0;
-        i++;
+        dest[i] = src[i];
     }
     return dest;
 } 
@@ -77,7 +70,7 @@ char *str_CAT(char *dest, const char *src)
 {    
     assert((src != nullptr) && (dest != nullptr));
 
-    size_t dest_length = str_length(dest); //это норма? Норма ли юзать str_length внутри других функций, если можно оптимизировать?
+    size_t dest_length = str_length(dest); 
 
     for(size_t i = 0; src[i] != 0; i++)
     {
@@ -86,7 +79,7 @@ char *str_CAT(char *dest, const char *src)
     return dest;
 }
 
-char *str_nCAT(char *dest, const char *src, size_t count)
+char *str_nCAT(char *dest, const char *src, const size_t count)
 {
     assert((src != nullptr) && (dest != nullptr));
 
@@ -105,15 +98,16 @@ char *str_nCAT(char *dest, const char *src, size_t count)
     return dest;
 }
 
-char *f_get_s(char *str, int count, FILE *file)
+char *f_get_s(char *str, const int count, FILE *file)
 {
     assert((file != nullptr) && (str != nullptr));
+
     if(count == 0)
     return str;
 
     size_t i = 0;
 
-    for(int temp_ch = 0; (temp_ch != (int) "\r") && (temp_ch != EOF) && (i < (count - 1)); i++)
+    for(int temp_ch = 0; (temp_ch != (int) '\r') && (temp_ch != EOF) && (i < (count - 1)); i++)
     {
         temp_ch = fgetc(file);
         str[i] = (char) temp_ch;
@@ -126,10 +120,66 @@ char *f_get_s(char *str, int count, FILE *file)
 
 char *str_dup(const char *str)
 {
-    char *str_copy = (char*) malloc(sizeof(str));
-    printf("%d", sizeof(str));
-    return str_copy; 
+    char *str_replica = (char*) malloc(str_length(str) + 1);
+
+    str_copy(str_replica, str);
+
+    return str_replica; 
 }
+
+FILE *get_line(FILE *file, char *dest, char separator)
+{
+    int temp_ch = 0;
+    size_t i = 0;
+
+    for(; ((temp_ch = getc(file)) != separator) && (temp_ch != EOF); i++)
+    {
+        dest[i] = temp_ch;
+    }   
+    dest[i] = 0;
+    
+    return file;
+}
+
+int str_alpha_cmpr(const char *str1, const char *str2)
+{                                                                                                                                                                                                                                                                       
+    assert(str1 != 0);
+    assert(str1 != 0);
+
+    for(size_t i = 0, j = 0; true;)
+    {
+        while((str1[i] != 0) && (isalpha(str1[i]) == 0))
+        {
+            i++;
+        }
+        while((str2[j] != 0) && (isalpha(str2[j]) == 0))
+        {
+            j++;
+        }
+        
+        if((str1[i] == str2[j]) && (str1[i] != 0))
+        {
+            i++; 
+            j++;
+            continue;
+        }
+        if(str1[i] > str2[j])
+        {
+            return 1;
+        }   
+        if(str1[i] < str2[j])
+        {
+            return -1;
+        }         
+        if((str1[i] == str2[j]) && (str1[i] == 0))
+        {
+            return 0;   
+        }
+            
+    }
+
+}
+
 //puts, strchr, strlen, strcpy, strncpy, strcat, strncat, fgets, strdup, getline - именно в таком порядке. 
 
 
@@ -139,4 +189,3 @@ char *str_dup(const char *str)
 //double *a
 //вопрос про size_t
 //i++ ++i
-//документация квадратки
